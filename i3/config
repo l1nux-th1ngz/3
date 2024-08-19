@@ -1,0 +1,432 @@
+# i3 config file (v4)
+
+# look - nord colorscheme ##############################################
+# Font for window titles. Will also be used by the bar unless a
+# different font is used in the bar {} block below.
+font pango:Hack 9
+# no titlebar
+default_border pixel 1
+# free client border
+default_floating_border pixel 3
+# hide borders when one client
+hide_edge_borders smart
+# colors
+# class                 border  bground text    indicator child_border
+client.focused          #4C7899 #5E81AC #D8DEE9 #5E81AC   #285577
+client.focused_inactive #4C566A #5F676A #D8DEE9 #484E50   #4C566A
+client.unfocused        #4C566A #2E3440 #888888 #292D2E   #4C566A
+client.urgent           #4C566A #BF616A #D8DEE9 #BF616A   #BF616A
+client.placeholder      #4C566A #2E3440 #D8DEE9 #2E3440   #4C566A
+client.background       #D8DEE9
+
+########################################################################
+# nakedeb offre 4 options d'affichage pour la statusbar :
+# polybar (par défaut), conky, i3blocks et i3status.
+
+# i3bar with polybar ###################################################
+# config file : ~/.config/polybar/config
+exec_always --no-startup-id $HOME/.config/polybar/launch.sh
+
+# i3bar with i3blocks ##################################################
+# config file : ~/.config/i3blocks/config
+#bar {
+#  position top
+#  status_command i3blocks
+#  workspace_buttons yes
+#  binding_mode_indicator yes
+#  tray_output yes
+#  font pango:Hack 9
+#  font pango:forkawesome 9
+#  separator_symbol " | "
+#  colors {
+#    background #2E3440
+#    statusline #D8DEE9
+#    separator  #D8DEE9
+#    focused_workspace  #4C566A #5E81AC #D8DEE9
+#    active_workspace   #4C566A #2E3440 #D8DEE9
+#    inactive_workspace #2E3440 #2E3440 #888888
+#    urgent_workspace   #4C566A #BF616A #D8DEE9
+#    binding_mode       #2E3440 #BF616A #D8DEE9
+#  }
+#}
+
+# i3bar with i3status ##################################################
+# config file : ~/.config/i3status/config
+#bar {
+#  position top
+#  status_command i3status
+#  workspace_buttons yes
+#  binding_mode_indicator yes
+#  tray_output yes
+#  font pango:Hack 9
+#  font pango:forkawesome 9
+#  separator_symbol " | "
+#  colors {
+#    background #2E3440
+#    statusline #D8DEE9
+#    separator  #D8DEE9
+#    focused_workspace  #4C566A #5E81AC #D8DEE9
+#    active_workspace   #4C566A #2E3440 #D8DEE9
+#    inactive_workspace #2E3440 #2E3440 #888888
+#    urgent_workspace   #4C566A #BF616A #D8DEE9
+#    binding_mode       #2E3440 #BF616A #D8DEE9
+#  }
+#}
+
+# bar with conky #######################################################
+#bar {
+#  position top
+#  status_command $HOME/.config/i3/i3conkybar
+#  workspace_buttons yes
+#  binding_mode_indicator yes
+#  tray_output yes
+#  font pango:Hack 9
+#  font pango:forkawesome 9
+#  colors {
+#    background #2E3440
+#    statusline #D8DEE9
+#    separator  #2E3440
+#    focused_workspace  #4C566A #5E81AC #D8DEE9
+#    active_workspace   #4C566A #2E3440 #D8DEE9
+#    inactive_workspace #2E3440 #2E3440 #888888
+#    urgent_workspace   #4C566A #BF616A #D8DEE9
+#    binding_mode       #2E3440 #BF616A #D8DEE9
+#  }
+#}
+
+# autostart applications ###############################################
+# autostart apps only at launch
+# global autostart
+exec --no-startup-id "export FBXDG_DE=i3 && fbautostart"
+# clean conky session
+exec --no-startup-id "if pgrep -a conky; then pkill -9 conky; fi"
+# power manager
+#exec --no-startup-id "xfce4-power-manager"
+# auto-mounting
+#exec --no-startup-id "pcmanfm -d --no-desktop"
+# auto hide mouse cursor
+exec --no-startup-id "unclutter-xfixes --timeout 1 --jitter 1 --ignore-buttons 4,5,6,7 --hide-on-touch --start-hidden"
+# auto lock screen
+exec --no-startup-id "xautolock -detectsleep -time 5 -locker 'nakedquit lock'"
+# GUI apps
+#exec "thunderbird"
+#exec "firefox"
+#exec "transmission-gtk"
+
+# autostart apps always
+# read cli config
+exec_always --no-startup-id "xrdb ~/.Xresources"
+# random wall
+exec_always --no-startup-id "feh --bg-fill -z /usr/share/backgrounds"
+# restore wall
+#exec_always --no-startup-id "~/.fehbg"
+# default wall
+#exec_always --no-startup-id "feh --bg-fill /usr/share/backgrounds/nakedeb.jpg"
+# solid color as wall
+#exec --no-startup-id "xsetroot -solid '#000000'"
+
+# keybinds #############################################################
+# modkey
+set $mod Mod1
+# keyboard control
+focus_follows_mouse no
+# kill focused window
+bindsym $mod+Shift+q kill
+# Toggle between dock mode and hide mode
+# toggle regular i3bar
+#bindsym $mod+b bar mode toggle
+# toggle polybar
+bindsym $mod+b exec polybar-msg cmd toggle
+# Use Mouse+$mod to drag floating windows to their wanted position
+floating_modifier $mod
+# start a regular terminal
+bindsym $mod+Return exec urxvtcd
+# lockscreen
+bindsym Mod4+l exec --no-startup-id "nakedquit lock"
+# dotcleaner
+bindsym Mod4+BackSpace exec --no-startup-id "dotcleaner"
+
+# scratchpad terminal ##################################################
+# lancer un terminal en début de session
+exec --no-startup-id "urxvtcd -name scratch -geometry 90x20"
+# rendre le terminal flottant et centré
+for_window [class="^URxvt$" instance="^scratch$"] floating enable, move absolute position center
+# définir les propriétés du terminal
+for_window [instance="^scratch$"] move scratchpad; [instance="^scratch$"] scratchpad show; move scratchpad
+# assigner un raccourci pour montrer/cacher le terminal
+bindsym Mod4+Return [instance="^scratch$"] scratchpad show
+# relancer le scratch
+bindsym Mod4+Shift+Return exec --no-startup-id "urxvtcd -name scratch -geometry 90x20"
+
+# apps launchers
+bindsym Mod4+r exec "urxvtcd -e lf"
+bindsym Mod4+Shift+r exec "pcmanfm --no-desktop"
+bindsym Mod4+e exec "geany"
+bindsym Mod4+x exec "urxvtcd -name irc -e weechat-curses"
+#bindsym Mod4+Shift+x exec "thunderbird"
+bindsym Mod4+w exec "nakedbrowser"
+#bindsym Mod4+Shift+w exec "firefox"
+bindsym Mod4+m exec "urxvtcd -name htop -e htop"
+bindsym Mod4+Ctrl+w exec --no-startup-id "nakedwalls"
+
+# screen temperature day/night
+bindsym Mod4+Shift+s exec --no-startup-id "$HOME/.config/polybar/screentemp toggle"
+
+# audio bindings
+bindsym Mod4+v exec "xterm -name sound -e alsamixer"
+bindsym XF86AudioRaiseVolume exec --no-startup-id "amixer -q sset Master 1%+ unmute"
+bindsym XF86AudioLowerVolume exec --no-startup-id "amixer -q sset Master 1%- unmute"
+bindsym XF86AudioMute exec --no-startup-id "amixer set Master toggle"
+
+# mocp bindings
+bindsym Mod4+z exec "urxvtcd -name player -e mocp"
+bindsym XF86AudioPrev exec --no-startup-id "mocp --previous"
+bindsym XF86AudioPlay exec --no-startup-id "mocp --toggle-pause"
+bindsym XF86AudioNext exec --no-startup-id "mocp --next"
+
+# start rofi (a program launcher)
+bindsym $mod+d exec "rofi -modi 'run,drun,window,ssh' -show run -sidebar-mode"
+bindsym $mod+p exec --no-startup-id "popmenu 0"
+
+# start tkmenu if installed
+bindsym $mod+Ctrl+m exec "tkmenu"
+
+# start search
+bindsym Mod4+f exec "nakedlocate"
+
+# print screen
+bindsym --release Print exec "scrot $HOME/screenshot-$(date +%Y%m%d-%H%M%S).png"
+# print selected area
+bindsym --release Mod4+Print exec "scrot --line style=solid,width=3,color='red' --select --freeze $HOME/screenshot-$(date +%Y%m%d-%H%M%S).png"
+
+# i3control ############################################################
+# change focus
+bindsym $mod+h focus left
+bindsym $mod+j focus down
+bindsym $mod+k focus up
+bindsym $mod+l focus right
+
+# alternatively, you can use the cursor keys:
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+
+# move focused window
+bindsym $mod+Shift+h move left
+bindsym $mod+Shift+j move down
+bindsym $mod+Shift+k move up
+bindsym $mod+Shift+l move right
+
+# alternatively, you can use the cursor keys:
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+
+# window-switcher Alt+Tab
+bindsym $mod+Tab exec rofi -show window
+
+# split in horizontal orientation
+bindsym $mod+h split h
+
+# split in vertical orientation
+bindsym $mod+v split v
+
+# enter fullscreen mode for the focused container
+bindsym $mod+f fullscreen toggle
+
+# default container layout
+workspace_layout tabbed
+
+# change container layout (stacked, tabbed, toggle split)
+bindsym $mod+s layout stacking
+bindsym $mod+t layout tabbed
+bindsym $mod+e layout toggle split
+
+# toggle tiling / floating
+bindsym $mod+Shift+space floating toggle
+
+# change focus between tiling / floating windows
+bindsym $mod+space focus mode_toggle
+
+# focus the parent container
+bindsym $mod+q focus parent
+
+# focus the child container
+#bindsym $mod+d focus child
+
+# workspaces ###########################################################
+# icons handled by polybar, uncomment if you use other option
+#set $ws1 "1:"
+#set $ws2 "2:"
+#set $ws3 "3:"
+#set $ws4 "4:"
+#set $ws5 "5:"
+#set $ws6 "6:"
+#set $ws7 "7:"
+#set $ws8 "8:"
+#set $ws9 "9:"
+#set $ws10 "10:"
+#set $ws11 "11:"
+#set $ws12 "12:"
+
+# icons handled by polybar, comment if you use other option
+set $ws1 "1"
+set $ws2 "2"
+set $ws3 "3"
+set $ws4 "4"
+set $ws5 "5"
+set $ws6 "6"
+set $ws7 "7"
+set $ws8 "8"
+set $ws9 "9"
+set $ws10 "10"
+set $ws11 "11"
+set $ws12 "12"
+
+# change workspaces
+bindsym $mod+Ctrl+Right workspace next
+bindsym Mod4+Right workspace next
+bindsym $mod+Ctrl+Left workspace prev
+bindsym Mod4+Left workspace prev
+
+# switch to workspace
+bindsym Mod1+1 workspace $ws1
+bindsym Mod1+2 workspace $ws2
+bindsym Mod1+3 workspace $ws3
+bindsym Mod1+4 workspace $ws4
+bindsym Mod1+5 workspace $ws5
+bindsym Mod1+6 workspace $ws6
+bindsym Mod1+7 workspace $ws7
+bindsym Mod1+8 workspace $ws8
+bindsym Mod1+9 workspace $ws9
+bindsym Mod1+0 workspace $ws10
+bindsym Mod1+minus workspace $ws11
+bindsym Mod1+equal workspace $ws12
+
+# move focused container to workspace
+bindsym Mod1+Shift+1 move container to workspace $ws1
+bindsym Mod1+Shift+2 move container to workspace $ws2
+bindsym Mod1+Shift+3 move container to workspace $ws3
+bindsym Mod1+Shift+4 move container to workspace $ws4
+bindsym Mod1+Shift+5 move container to workspace $ws5
+bindsym Mod1+Shift+6 move container to workspace $ws6
+bindsym Mod1+Shift+7 move container to workspace $ws7
+bindsym Mod1+Shift+8 move container to workspace $ws8
+bindsym Mod1+Shift+9 move container to workspace $ws9
+bindsym Mod1+Shift+0 move container to workspace $ws10
+bindsym Mod1+Shift+minus move container to workspace $ws11
+bindsym Mod1+Shift+equal move container to workspace $ws12
+
+# automatic back and forth when switching workspaces
+workspace_auto_back_and_forth yes
+
+# reload the configuration file
+bindsym $mod+Shift+c reload
+
+# restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
+bindsym $mod+Shift+r restart
+
+# exit i3 (logs you out of your X session)
+#bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
+#bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'Want to quit ? >> select an action or cancel >>' -B 'suspend' 'systemctl suspend' -B 'reboot' 'systemctl reboot' -B 'shutdown' 'systemctl poweroff' -B 'exit i3' 'i3-msg exit'"
+bindsym $mod+Shift+e exec "nakedquit"
+
+# resize window (you can also use the mouse for that)
+set $mode_resize "Resize(←↑↓→) Gaps(+/-)"
+mode $mode_resize {
+    # resize windows vimlike
+    bindsym h resize shrink width 10 px or 10 ppt
+    bindsym j resize grow height 10 px or 10 ppt
+    bindsym k resize shrink height 10 px or 10 ppt
+    bindsym l resize grow width 10 px or 10 ppt
+    # with arrow keys
+    bindsym Left resize shrink width 10 px or 10 ppt
+    bindsym Down resize grow height 10 px or 10 ppt
+    bindsym Up resize shrink height 10 px or 10 ppt
+    bindsym Right resize grow width 10 px or 10 ppt
+    # resize window Gaps with +/-
+    bindsym minus gaps inner current minus 5px
+    bindsym plus gaps inner current plus 5px
+    # Return to default mode
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+    bindsym $mod+r mode "default"
+}
+# launch resize mode
+bindsym $mod+r mode $mode_resize
+
+# audio menu mode
+set $mode_audio "Audio(↑/↓/m) Micro(+/-/n)"
+mode $mode_audio {
+    # volume control
+    bindsym Up exec --no-startup-id "amixer -q sset Master 1%+ unmute"
+    bindsym Down exec --no-startup-id "amixer -q sset Master 1%- unmute"
+    bindsym m exec --no-startup-id "amixer set Master toggle"
+    # micro control
+    bindsym minus exec --no-startup-id "amixer -q sset Capture 1%- cap"
+    bindsym plus exec --no-startup-id "amixer -q sset Capture 1%+ cap"
+    bindsym n exec --no-startup-id "amixer set Capture toggle"
+    # Return to default mode
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+# launch audio mode (Super+s)
+bindsym Mod4+s mode $mode_audio
+
+# wait before reset urgency hint
+force_display_urgency_hint 1000 ms
+
+
+# auto floating
+for_window [class="XTerm"] floating enable, move absolute position center
+for_window [class="Cyclope"] floating enable, move absolute position center
+for_window [class="File-roller"] floating enable, move absolute position center
+for_window [class="XCalc"] floating enable, move absolute position center
+for_window [class="Xmessage"] floating enable, move absolute position center
+for_window [class="Lxappearance"] floating enable, move absolute position center
+for_window [class="mpv"] floating enable, move absolute position center
+for_window [class="Sxiv"] floating enable, move absolute position center
+for_window [class="Nsxiv"] floating enable, move absolute position center
+for_window [class="Tk"] floating enable, move absolute position center
+#for_window [instance="Msgcompose"] floating enable, move absolute position center
+#for_window [class="VirtualBox Machine"] floating enable, move absolute position center
+
+# assign clients to specific workspace #################################
+# disable assign with: `sed -i '/^assign \[/ s/^/#/' ~/.config/i3/config`
+# ws1 mail
+assign [class="thunderbird"] $ws1
+# ws2 web
+assign [class="Firefox-esr"] $ws2
+assign [class="Nightly"] $ws2
+assign [class="Luakit"] $ws2
+# ws3 irc
+assign [class="^URxvt$" instance="^irc$"] $ws3
+# ws4 edit
+assign [class="Geany"] $ws4
+assign [instance="libreoffice"] $ws4
+# ws5 media
+assign [class="Handbrake-gtk"] $ws5
+assign [class="Avidemux"] $ws5
+assign [class="avidemux3_portable"] $ws5
+assign [class="Pitivi"] $ws5
+assign [class="openshot"] $ws5
+# ws6 gfx
+assign [class="Gimp"] $ws6
+assign [class="Inkscape"] $ws6
+assign [class="Gthumb"] $ws6
+# ws7 vbox
+assign [class="VirtualBox Manager"] $ws7
+assign [class="VirtualBox Machine"] $ws7
+# ws8 bkp
+assign [class="Filezilla"] $ws8
+assign [class="Unison"] $ws8
+# ws9 p2p
+assign [class="Transmission-gtk"] $ws9
+# ws10 top
+assign [class="^URxvt$" instance="^htop$"] $ws10
+assign [class="Psensor"] $ws10
+# ws11 deb
+# ws12 zik
+assign [class="^URxvt$" instance="^player$"] $ws12

@@ -1,0 +1,66 @@
+--[[
+  i3wm conkyrc arpinux@2020©WTFPL
+  use with forkawesome fonts
+  nord colors :
+    #2e3440 – default dark background
+    #3b4252 – black
+    #434c5e - black lighter
+    #4c566a – bright black
+    #d8dee9 – default clear foreground
+    #e5e9f0 – white
+    #eceff4 – bright white
+    #8fbcbb – bright cyan
+    #88c0d0 – cyan
+    #81a1c1 – blue
+    #5e81ac - bright blue
+    #bf616a – red
+    #d08770 – orange
+    #ebcb8b – yellow
+    #a3be8c – green
+    #b48ead – purple
+
+  extra infos -- exemples
+  - notifier un volume externe monté
+  { "full_text": "${font forkawesome:size=9}${if_mounted /media/arp/nak3dback} ${fs_used_perc /media/arp/nak3dback}%${endif}" , "color": "\#d8dee9" },
+  - cpu 4 cœurs
+  { "full_text": "${font forkawesome:size=9}  ${cpu cpu1}% ${cpu cpu2}% ${cpu cpu3}% ${cpu cpu4}%" ,\
+   "color": ${if_match ${cpu}>80}"\#bf616a"${else}"\#81a1c1"${endif} },
+  - température du processeur
+  { "full_text": "${font forkawesome:size=9} ${texeci 5 sensors|grep "Core 2"| awk '{print $3}'|cut -c2-}" ,\
+   "color": ${if_match "${texeci 5 sensors|grep "Core 2"|awk '{print $3}'|cut -d"+" -f 2|sed s/.0°C//g}" > "75"}"\#bf616a"${else}"\#81a1c1"${endif} },
+  - volume interne en auto-mounting
+  { "full_text": "      ${font forkawesome:size=9} ${fs_used_perc /media/arp/Xtra}% ${fs_free /media/arp/Xtra}" , "color": "\#d08770" },
+  - activité réseau
+  { "full_text": "      ${font forkawesome:size=9}${if_up wlp3s0} ${upspeedf wlp3s0}k/s ${downspeedf wlp3s0}k/s${else}${if_up enp2s0} ${upspeedf enp2s0}k/s ${downspeedf enp2s0}k/s${else}net ${endif}${endif}" , "color": ${if_gw}"\#88c0d0"${else}"\#bf616a"${endif} },
+  - gestion de l'alimentation
+  { "full_text": "      ${font forkawesome:size=9}${if_match ${battery_percent}<5}${blink   }${else}${if_match "${acpiacadapter}" == "on-line"}  ${battery_percent}%${else} ${battery_percent}% ${battery_time}${endif}${endif}" , "color": ${if_match ${battery_percent}<10}"\#bf616a"${else}"\#ebcb8b"${endif} },
+
+]]
+
+conky.config = {
+  out_to_x = false,
+  out_to_console = true,
+  background = false,
+  update_interval = 2.0,
+  total_run_times = 0,
+  top_name_width = 10,
+  use_spacer = 'none',
+  double_buffer = yes,
+  cpu_avg_samples = 2,
+  short_units = true,
+  text_buffer_size = 2048,
+  if_up_strictness = 'address'
+}
+
+conky.text = [[
+[
+  { "full_text": "${font forkawesome:size=9}  ${cpu}%" , "color": ${if_match ${cpu}>80}"\#bf616a"${else}"\#81a1c1"${endif} },
+  { "full_text": ">${loadavg 1}" , "color": "\#81a1c1" },
+  { "full_text": "      ${font forkawesome:size=9} ${memperc}% ${mem}" , "color": ${if_match ${memperc} > 50}"\#bf616a"${else}"\#a3be8c"${endif} },
+  { "full_text": "      ${font forkawesome:size=9}${fs_used_perc /}% ${fs_free /}" , "color": "\#d08770" },
+  { "full_text": "      ${font forkawesome:size=9}${if_pa_sink_muted} x${else} ${pa_sink_volume}%${endif}" , "color": ${if_pa_sink_muted}"\#bf616a"${else}"\#b48ead"${endif} },
+  { "full_text": "      ${font forkawesome:size=9} ${uptime_short}" , "color": "\#81a1c1" },
+  { "full_text": "      ${font forkawesome:size=9} ${time %a%d/%m}" , "color": "\#d8dee9" },
+  { "full_text": "${font forkawesome:size=9} ${time %I:%M} " , "color": "\#ffffff" }
+],
+]];

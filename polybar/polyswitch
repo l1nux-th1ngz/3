@@ -1,0 +1,18 @@
+#!/bin/bash
+# simple script to switch between icon & text polybar configuration
+
+case "${1}" in
+    txt) killall -q polybar
+        echo -e "---- $(date +%Y%m%d-%H%M%S)" | tee -a /tmp/nakedbartxt.log
+        polybar -c $HOME/.config/polybar/configtxt.ini nakedbartxt >> /tmp/nakedbartxt.log 2>&1 & disown
+        echo "nakedbar text mode launched"
+        ;;
+    icon) killall -q polybar
+        echo -e "---- $(date +%Y%m%d-%H%M%S)" | tee -a /tmp/nakedbar.log
+        polybar -c $HOME/.config/polybar/config.ini nakedbar >> /tmp/nakedbar.log 2>&1 & disown
+        echo "nakedbar icon mode launched"
+        ;;
+    *) echo "usage : polyswitch [txt|icon]"
+        ;;
+esac
+exit 0

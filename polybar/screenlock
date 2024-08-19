@@ -1,0 +1,48 @@
+#!/bin/bash
+# check and/or toggle screenlock
+userlocale=$(echo $LANG | cut -b-2)
+case $userlocale in
+    fr) messageon="économiseur activé"
+        messageoff="économiseur désactivé"
+        ;;
+    *) messageon="saver & locker enabled"
+       messageoff="saver & locker disabled"
+       ;;
+esac
+
+case "$1" in
+    toggle)
+        if ! pgrep -x xautolock > /dev/null 2>&1; then
+            xautolock -detectsleep -time 5 -locker 'nakedquit lock' &
+            xset s on; xset +dpms
+            notify-send "$messageon"
+        else
+            pkill xautolock
+            xset s off; xset -dpms
+            notify-send "$messageoff"
+        fi
+        ;;
+    check)
+        if ! pgrep -x xautolock > /dev/null 2>&1; then
+            echo "%{B#d8dee9}%{F#2e3440}  %{F-}%{B-}"
+        else
+            echo "%{B#3b4252}%{F#7e8187}  %{F-}%{B-}"
+        fi
+        ;;
+    checktext)
+        if ! pgrep -x xautolock > /dev/null 2>&1; then
+            echo "%{F#bf616a}LOCK%{F-}"
+        else
+            echo "%{F#d8dee9}LOCK%{F-}"
+        fi
+        ;;
+    *)
+        if ! pgrep -x xautolock > /dev/null 2>&1; then
+            notify-send "$messageoff"
+        else
+            notify-send "$messageon"
+        fi
+        ;;
+esac
+
+exit 0

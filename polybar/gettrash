@@ -1,0 +1,12 @@
+#!/bin/bash
+if [ ! -e $HOME/.local/share/Trash/files ]; then
+    echo ""
+else
+    trashcount="$(ls -U -1 "$HOME/.local/share/Trash/files" | wc -l)"
+    if [[ ${trashcount} > 0 ]]; then
+        echo ""
+    else
+        echo ""
+    fi
+fi
+exit 0

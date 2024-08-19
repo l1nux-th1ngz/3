@@ -1,0 +1,46 @@
+#!/bin/bash
+# check and/or toggle screentemp
+userlocale=$(echo $LANG | cut -b-2)
+case $userlocale in
+    fr) messageon="redshift activé"
+        messageoff="redshift désactivé"
+        ;;
+    *) messageon="redshift enabled"
+       messageoff="redshift disabled"
+       ;;
+esac
+
+case "$1" in
+    toggle)
+        if ! pgrep -x redshift > /dev/null 2>&1; then
+            redshift &
+            notify-send "$messageon"
+        else
+            pkill redshift
+            notify-send "$messageoff"
+        fi
+        ;;
+    check)
+        if ! pgrep -x redshift > /dev/null 2>&1; then
+            echo "%{F#d8dee9}%{F-}"
+        else
+            echo "%{F#bf616a}%{F-}"
+        fi
+        ;;
+    checktext)
+        if ! pgrep -x redshift > /dev/null 2>&1; then
+            echo "%{F#d8dee9}RED%{F-}"
+        else
+            echo "%{F#bf616a}RED%{F-}"
+        fi
+        ;;
+    *)
+        if ! pgrep -x redshift > /dev/null 2>&1; then
+            notify-send "$messageoff"
+        else
+            notify-send "$messageon"
+        fi
+        ;;
+esac
+
+exit 0
